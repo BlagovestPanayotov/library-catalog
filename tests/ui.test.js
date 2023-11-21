@@ -22,3 +22,13 @@ test('Verify "Login" button is visible', async ({ page }) => {
 
   expect(isBtnLoginVisible).toBe(true);
 });
+
+test('Verify that "Register" buttom is visible', async ({ page }) => {
+  await page.goto(url);
+  await page.waitForSelector('nav.navbar');
+
+  const registerBtn = await page.$('a[href="/register"]');
+  const isRegisterBtnVisilbe = await registerBtn.isVisible();
+
+  expect(isRegisterBtnVisilbe).toBe(true);
+});
