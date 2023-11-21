@@ -9,7 +9,7 @@ async function loginUser(page) {
   await page.click('input[type="submit"]');
 }
 
-//Test visability before Login
+//Test page '/' visability before Login
 
 test('Verify "All books" link is visible', async ({ page }) => {
   await page.goto(url);
@@ -41,7 +41,7 @@ test('Verify that "Register" buttom is visible', async ({ page }) => {
   expect(isRegisterBtnVisilbe).toBe(true);
 });
 
-//Test visability after Login
+//Test  page '/' visability after Login
 
 test('Verify "All Books" link is visible after user login', async ({ page }) => {
   await loginUser(page);
@@ -97,3 +97,57 @@ test("Verify That the User's Email Address Is Visible", async ({ page }) => {
 
   expect(isUserEmailVisible).toBe(true);
 });
+
+//Test login form 
+
+test("Submit the Form with Valid Credentials", async ({ page }) => {
+  await loginUser(page);
+
+  await page.$('a[href="/catalog"]');
+  expect(page.url()).toBe(url + '/catalog');
+});
+
+test("Submit the Form with Empty Input Fields", async ({ page }) => {
+  await page.goto(url + '/login');
+  await page.click('input[type="submit"]');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toContain('alert');
+    expect(dialog.message()).toContain('All fields are required!');
+    await dialog.accept();
+  });
+
+  // await page.$('a[href="/login"]');
+  expect(page.url()).toBe(url + '/login');
+});
+
+test("Submit the Form with Empty Email Input Field", async ({ page }) => {
+  await page.goto(url + '/login');
+  await page.fill('input[name="password"]', '123456');
+  await page.click('input[type="submit"]');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toContain('alert');
+    expect(dialog.message()).toContain('All fields are required!');
+    await dialog.accept();
+  });
+
+  // await page.$('a[href="/login"]');
+  expect(page.url()).toBe(url + '/login');
+});
+
+test("Submit the Form with Empty Password Input Field", async ({ page }) => {
+  await page.goto(url + '/login');
+  await page.fill('input[name="email"]', userEmail);
+  await page.click('input[type="submit"]');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toContain('alert');
+    expect(dialog.message()).toContain('All fields are required!');
+    await dialog.accept();
+  });
+
+  // await page.$('a[href="/login"]');
+  expect(page.url()).toBe(url + '/login');
+});
+
