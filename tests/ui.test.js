@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 const url = 'http://localhost:3000';
 const userEmail = 'peter@abv.bg';
+
 async function loginUser(page) {
   await page.goto(url + '/login');
   await page.fill('input[name="email"]', userEmail);
@@ -151,3 +152,88 @@ test("Submit the Form with Empty Password Input Field", async ({ page }) => {
   expect(page.url()).toBe(url + '/login');
 });
 
+//Test register form
+
+test("Submit the Form with Valid Values", async ({ page }) => {
+  await page.goto(url + '/register');
+  await page.fill('input[name="email"]', `peter${new Date().getTime()}@abv.bg`);
+  await page.fill('input[name="password"]', '123456');
+  await page.fill('input[name="confirm-pass"]', '123456');
+  await page.click('input.button');
+
+  await page.$('a[href="/catalog"]');
+  expect(page.url()).toBe(url + '/catalog');
+});
+
+test("Submit the Form with Empty Values", async ({ page }) => {
+  await page.goto(url + '/register');
+  await page.click('input.button');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('alert');
+    expect(dialog.message()).toContain('All fields are required!');
+    await dialog.accept();
+  });
+
+  expect(page.url()).toBe(url + '/register');
+});
+
+test("Submit the Form with Empty Email", async ({ page }) => {
+  await page.goto(url + '/register');
+  await page.fill('input[name="password"]', '123456');
+  await page.fill('input[name="confirm-pass"]', '123456');
+  await page.click('input.button');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('alert');
+    expect(dialog.message()).toContain('All fields are required!');
+    dialog.accept();
+  });
+
+  expect(page.url()).toBe(url + '/register');
+});
+
+test("Submit the Form with Empty Password", async ({ page }) => {
+  await page.goto(url + '/register');
+  await page.fill('input[name="email"]', `peter${new Date().getTime()}@abv.bg`);
+  await page.fill('input[name="confirm-pass"]', '123456');
+  await page.click('input.button');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('alert');
+    expect(dialog.message()).toContain('All fields are required!');
+  });
+
+  expect(page.url()).toBe(url + '/register');
+});
+
+test("Submit the Form with Empty Confirm Password", async ({ page }) => {
+  await page.goto(url + '/register');
+  await page.fill('input[name="email"]', `peter${new Date().getTime()}@abv.bg`);
+  await page.fill('input[name="password"]', '123456');
+  await page.click('input.button');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('alert');
+    expect(dialog.message()).toContain('All fields are required!');
+    await dialog.accept();
+  });
+
+  expect(page.url()).toBe(url + '/register');
+});
+
+test("Submit the Form with Different Passwords", async ({ page }) => {
+  await page.goto(url + '/register');
+  await page.fill('input[name="email"]', `peter${new Date().getTime()}@abv.bg`);
+  await page.fill('input[name="password"]', '123456');
+  await page.fill('input[name="confirm-pass"]', '654321');
+  await page.click('input.button');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('alert');
+    expect(dialog.message()).toContain("Passwords don't match!");
+    await dialog.accept();
+  });
+
+  expect(page.url()).toBe(url + '/register');
+});
