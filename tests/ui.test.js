@@ -7,7 +7,10 @@ async function loginUser(page) {
   await page.goto(url + '/login');
   await page.fill('input[name="email"]', userEmail);
   await page.fill('input[name="password"]', '123456');
-  await page.click('input[type="submit"]');
+  await Promise.all([
+    page.click('input[type="submit"]'),
+    page.waitForURL(url + '/catalog')
+  ]);
 }
 
 //Test page '/' visability before Login
@@ -237,3 +240,85 @@ test("Submit the Form with Different Passwords", async ({ page }) => {
 
   expect(page.url()).toBe(url + '/register');
 });
+
+
+//Test "Add Book" Page (with user, without user is not visible)
+
+test('Submit the Form with Correct Data', async ({ page }) => {
+  await loginUser(page);
+  await page.goto(url + '/create');
+
+  await page.waitForSelector('#create-form');
+
+  await page.fill('input[name="title"]', `Orcs${new Date().getTime()}`);
+  await page.fill('textarea[name="description"]', `There are some orks. ${new Date().getTime()}`);
+  await page.fill('input[name="imageUrl"]', 'https://productimages.worldofbooks.com/0575074876.jpg');
+  await page.selectOption('select[name="type"]', 'Fiction');
+  await page.click('input[type="submit"]');
+
+  await page.waitForURL(url + '/catalog');
+  expect(page.url()).toBe(url + '/catalog');
+});
+
+test('Submit the Form with Empty Title Field', async ({ page }) => {
+  await loginUser(page);
+  page.goto(url + '/create');
+
+  await page.waitForSelector('#create-form');
+
+  await page.fill('textarea[name="description"]', `There are some orks. ${new Date().getTime()}`);
+  await page.fill('input[name="imageUrl"]', 'https://productimages.worldofbooks.com/0575074876.jpg');
+  await page.selectOption('select[name="type"]', 'Fiction');
+  await page.click('input[type="submit"]');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('alert');
+    expect(dialog.textContent()).toContain('All fields are required!');
+    await dialog.accept();
+  });
+
+  expect(page.url()).toBe(url + '/create');
+});
+
+test('Submit the Form with Empty Description Field', async ({ page }) => {
+  await loginUser(page);
+  page.goto(url + '/create');
+
+  await page.waitForSelector('#create-form');
+
+  await page.fill('input[name="title"]', `Orcs${new Date().getTime()}`);
+  await page.fill('input[name="imageUrl"]', 'https://productimages.worldofbooks.com/0575074876.jpg');
+  await page.selectOption('select[name="type"]', 'Fiction');
+  await page.click('input[type="submit"]');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('alert');
+    expect(dialog.textContent()).toContain('All fields are required!');
+    await dialog.accept();
+  });
+
+  expect(page.url()).toBe(url + '/create');
+});
+
+test('Submit the Form with Empty Image URL Field', async ({ page }) => {
+  await loginUser(page);
+  page.goto(url + '/create');
+
+
+  await page.waitForSelector('#create-form');
+
+  await page.fill('input[name="title"]', `Orcs${new Date().getTime()}`);
+  await page.fill('textarea[name="description"]', `There are some orks. ${new Date().getTime()}`);
+  await page.selectOption('select[name="type"]', 'Fiction');
+  await page.click('input[type="submit"]');
+
+  page.on('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('alert');
+    expect(dialog.textContent()).toContain('All fields are required!');
+    await dialog.accept();
+  });
+
+  expect(page.url()).toBe(url + '/create');
+});
+
+
