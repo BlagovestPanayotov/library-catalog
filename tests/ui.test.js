@@ -322,3 +322,22 @@ test('Submit the Form with Empty Image URL Field', async ({ page }) => {
 });
 
 
+//Test "All Books" Page
+
+test('Verify That All Books Are Displayed', async ({ page }) => {
+  await loginUser(page);
+  await page.waitForSelector('.dashboard');
+
+  const bookElements = await page.$$('.other-books-list li');
+
+  expect(bookElements.length).toBeGreaterThan(0);
+});
+
+test('Verify That No Books Are Displayed', async ({ page }) => {
+  await loginUser(page);
+  await page.waitForSelector('.dashboard');
+
+  const noBookMessage = await page.textContent('.no-books');
+
+  expect(noBookMessage).toBe('No books in database!');
+ });
