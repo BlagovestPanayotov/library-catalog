@@ -350,12 +350,15 @@ test('Verify That No Books Are Displayed', async ({ page }) => {
 test('Verify That Logged-In User Sees Details Button and Button Works Correctly', async ({ page }) => {
   await loginUser(page);
   await page.waitForSelector('.otherBooks');
+
+  const bookTitle = await page.locator('.otherBooks h3').first().textContent();
+
   await page.click('.otherBooks a.button');
 
   await page.waitForSelector('.book-information');
 
   const detailsPageTitle = await page.textContent('.book-information h3');
-  expect(detailsPageTitle).toBe('To Kill a Mockingbird');
+  expect(detailsPageTitle).toBe(bookTitle);
 });
 
 test('Verify That Guest User Sees Details Button and Button Works Correctly', async ({ page }) => {
@@ -459,3 +462,25 @@ test('Verify If Like Button Is Visible for Non-Creator', async ({ page }) => {
   expect(likeBtn).toBe('Like');
 });
 
+//Test "Logout" Functionality
+
+test('Verify That the "Logout" Button Is Visible', async ({ page }) => {
+  await loginUser(page);
+  await page.waitForSelector('nav.navbar');
+
+  const loginBtn = await page.$('#logoutBtn');
+  const isLoginBtnVisible = await loginBtn.isVisible();
+
+  expect(isLoginBtnVisible).toBe(true);
+});
+
+test('Verify That the "Logout" Button Redirects Correctly', async ({ page }) => {
+  await loginUser(page);
+  await page.waitForSelector('nav.navbar');
+
+  await page.click('#logoutBtn');
+
+  await page.waitForURL(url + '/catalog');
+
+  expect(page.url()).toBe(url + '/catalog');
+});
