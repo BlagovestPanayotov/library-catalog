@@ -22,7 +22,7 @@ jobs:
     - name: Build the app
       run: npm install
     - name: Start Backend
-      run: npm run server
+      run: npm run server &
     - name: Start Frondend
       run: npm start
     - name: Start tests
