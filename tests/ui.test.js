@@ -48,6 +48,17 @@ test('Verify that "Register" buttom is visible', async ({ page }) => {
   expect(isRegisterBtnVisilbe).toBe(true);
 });
 
+//Test "All Books" Page I
+
+test('Verify That No Books Are Displayed', async ({ page }) => {
+  await loginUser(page);
+  await page.waitForSelector('.dashboard');
+
+  const noBookMessage = await page.textContent('.no-books');
+
+  expect(noBookMessage).toBe('No books in database!');
+});
+
 //Test  page '/' visability after Login
 
 test('Verify "All Books" link is visible after user login', async ({ page }) => {
@@ -324,8 +335,7 @@ test('Submit the Form with Empty Image URL Field', async ({ page }) => {
   expect(page.url()).toBe(url + '/create');
 });
 
-
-//Test "All Books" Page
+//Test "All Books" Page II
 
 test('Verify That All Books Are Displayed', async ({ page }) => {
   await loginUser(page);
@@ -336,14 +346,6 @@ test('Verify That All Books Are Displayed', async ({ page }) => {
   expect(bookElements.length).toBeGreaterThan(0);
 });
 
-test('Verify That No Books Are Displayed', async ({ page }) => {
-  await loginUser(page);
-  await page.waitForSelector('.dashboard');
-
-  const noBookMessage = await page.textContent('.no-books');
-
-  expect(noBookMessage).toBe('No books in database!');
-});
 
 //Test "Details" Page
 
