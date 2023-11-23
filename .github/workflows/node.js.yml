@@ -21,9 +21,9 @@ jobs:
         cache: 'npm'
     - name: Build the app
       run: npm install
-    - name: Start Frondend
-      run: npm start
     - name: Start Backend
       run: npm run server
+    - name: Start Frondend
+      run: npm start
     - name: Start tests
       run: npm test
