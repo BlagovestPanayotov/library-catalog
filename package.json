@@ -7,7 +7,7 @@
         "test-ui": "npx playwright test tests/ui.test.js",
         "test": "mocha tests",
         "start": "http-server -a localhost -p 3000 -P http://localhost:3000? -c-1",
-        "server": "node server/server.js"
+        "server": "node ./server/server.js"
     },
     "author": "",
     "license": "ISC",
