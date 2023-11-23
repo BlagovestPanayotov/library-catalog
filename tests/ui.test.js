@@ -484,5 +484,5 @@ test('Verify That the "Logout" Button Redirects Correctly', async ({ page }) => 
 
   await page.waitForURL(url + '/catalog');
 
-  expect(page.url()).toBe(url + '/catalog');
+  expect(page.url()).toBe(url + '/catalo');
 });
