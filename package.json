@@ -8,7 +8,7 @@
         "test": "mocha tests",
         "start": "http-server -a localhost -p 3000 -P http://localhost:3000? -c-1",
         "server": "node ./server/server.js",
-        "deploy": "npm run server && npm run start"
+        "deploy": "(http-server -p 3000 -a 0.0.0.0) && npm run server"
     },
     "author": "",
     "license": "ISC",
