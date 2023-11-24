@@ -26,4 +26,4 @@ jobs:
     - name: Start Frondend
       run: npm start &
     - name: Start tests
-      run: npm test
+      run: npm test-ui
