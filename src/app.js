@@ -43,7 +43,7 @@ function setUserNav() {
     if (email) {
         document.getElementById('user').style.display = '';
         document.getElementById('guest').style.display = 'none';
-        document.querySelector('#user > span').textContent = `Welcome, ${email}`;
+        document.querySelector('#user > span').textContent = `Welcome, dear ${email}`;
     } else {
         document.getElementById('user').style.display = 'none';
         document.getElementById('guest').style.display = '';
