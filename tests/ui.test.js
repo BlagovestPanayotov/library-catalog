@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-const url = 'https://lybrary-catalog-server-softuni.onrender.com';
+const url = 'http://localhost:3000';
 const userEmail = 'john@abv.bg';
 const secondUserEmail = 'peter@abv.bg';
 
