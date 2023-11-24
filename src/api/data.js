@@ -1,7 +1,7 @@
 import * as api from './api.js';
 
-const host = 'https://lybrary-catalog-server-softuni.onrender.com'
-api.settings.host = 'https://lybrary-catalog-server-softuni.onrender.com';
+const host = 'http://localhost:3030'
+api.settings.host = 'http://localhost:3030';
 
 export const login = api.login;
 export const register = api.register;
